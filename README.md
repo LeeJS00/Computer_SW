@@ -3,6 +3,7 @@ CSED_211 : Introduction to Computer SW Architecture
 
 ## Book
 Computer Systems: A programmer’s Perspective by R. Bryant and D. O’Hallaron, Prentice Hall, 3rd ed.
+---
 
 ## 2. Bits, Bytes, Integers
 
@@ -34,8 +35,7 @@ Computer Systems: A programmer’s Perspective by R. Bryant and D. O’Hallaron,
 
 ## 3. Floating Point
 
-$$(-1)^s M 2^E$$
-
+- (-1)^s M 2^E
 - Bit form  sign 1 , exp X, frac Y
 - Normalized Values
     - exp ≠ 000...0 or 111...1
@@ -67,6 +67,115 @@ $$(-1)^s M 2^E$$
     - d * d≥ 0.0 T
     - (d+f) -d == f  F
 
-    ---
+---
 
-    ## 4. Machine-Level Basic
+## 4. Machine-Level Basic
+
+x86-64, intel, CISC Archiecture.
+
+- ISA(Instruction Set Architecture)
+- Assembler VS. Linker
+    - binary encoding | resolves references
+    - nearly-complete | runtime stack
+- movq src, dest
+    - imme, reg, mem
+    - mem to mem X
+- D(Rb, Ri, S) = Mem [ Reg[Rb] + Reg[Ri] *s + D]
+- leaq without a memory reference
+- addq, subq, imulq, xorq, andq, orq
+- salq(dest << src), sarq(dest>>src. sign),shrq(dest>>>src. 0)
+- incq ++, decq —, negq -, notq ~
+
+---
+
+## 5. Control
+
+- Registers.
+    - Temporary data : %rax, %rbx ...
+    - Location of runtime stack : %rsp
+    - Location of current code control point : %rip
+    - Status of recent tests : CF, ZF, SF, OF
+- Test registers cmpq. (a-b)
+    - CF(Carry Flag) : unsigned
+    - ZF(Zero Flag) : (a == b) ? 1 : 0
+    - SF(Sign Flag) : (a-b)<0 ? 1 : 0
+    - OF(Overflow Flag) : Overflow
+- testq. a&b
+    - CF : X
+    - ZF : (a&b==0) ? 1:0
+    - SF : (a&b < 0) ? 1:0
+    - OF : X
+- Condition codes. setX
+    - setX 1bit reg(%al, %bl)
+    - X alter bytes
+    - movzbl %al, %eax
+- Jumping. jX
+- Conditional Moves (X branch)
+    - Branches are not good to use pipelines.
+    - Conditonal moves don't require control transfer
+    - Bad cases
+        - compute all cases. Expensive, risky.
+        - Bac peformance. unsafe, side-effect free
+    - Do-while, while, for
+        - init, test, update
+    - switch, jmp *.Lx(,%rdi,8)
+
+---
+
+## 6. Procedures
+
+Designer choose the mechanisms of procedures : ABI
+
+- x86-64 use Stack in memory
+- stack pointer : %rsp. TOP.
+    - Bottom has higher addresses
+    - pushq src : %rsp -= 8
+    - popq src : %rsp += 8
+    - Mem X change
+- Passing control
+    - call label : jmp to label
+    - ret : pop & jmp stack address
+- Passing data
+    - Argument :%rdi, %rsi, %rdx, %rcx, %r8, %r9 + stack(when needed)
+    - Return : %rax
+- Managing local data
+    - recursion. Local variables
+    - Stack Frames
+        - use frame to allocate each function : %rbp
+        - return, local variables, temp space
+    - Caller saved reg : %r10, %r11
+    - Callee saved reg : %rbx, %r12 ... %r15. %rbp, %rsp
+
+---
+
+## 7. Data
+
+- Arrays
+    - (array start, i, sizeof(type)) access
+    - A[], *A, *A[], (*A)[] differences
+    - Multidimensional array
+        - nest : A[R][C], A[i][j] = Mem[A+(i*C+j)*sizeof(Data)]
+        - multi-level : find each start
+- Structures
+    - block of mem
+    - field order important
+    - Alignment
+        - multiple of largest datatype
+        - save space with largest first
+- Floating Point
+    - %xmmX regs : caller-saved
+    - ss : single, sd : double
+    - PF : Parity Flag.
+    - xorpd set 0
+
+---
+
+## 8. Advanced Topics
+
+- Unions
+    - allocate only largest element
+    - Little Endian
+- Memory layout
+- Buffer overflow
+
+---
