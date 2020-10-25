@@ -2,6 +2,7 @@
 CSED_211 : Introduction to Computer SW Architecture
 
 ## Book
+
 Computer Systems: A programmer’s Perspective by R. Bryant and D. O’Hallaron, Prentice Hall, 3rd ed.
 ---
 
@@ -176,6 +177,67 @@ Designer choose the mechanisms of procedures : ABI
     - allocate only largest element
     - Little Endian
 - Memory layout
+    - Stack, heap, data, text, shared libraries
 - Buffer overflow
+    - Buffer Overflow - Smashed stack
+        - buffer is smaller than input, so stack unexpected change
+        - wrong return
+    - Code injection
+        - gets code string & return address to string
+    - Prevent
+        - Avoid overflow vulnerabilites
+            - fgets, strncpy ⇒ size
+        - system-level protections
+            - Randomized stack offsets
+                - allocate random amount of space on stack
+                - Shift stack address
+            - Nonexecutable code segments
+                - stack mark as non executable
+        - Stack canaries
+            - plac special value "canary" just beyond buffer
+            - check the value before exiting
+    - ROP
+        - overcome randomized stack, non executale code. X canary
+        - Use existing code ⇒ gadgets
+
+---
+
+## 9. Optimizations
+
+- Code motion
+    - reduce frequency with moving. out of loop
+- Reduction in strength
+    - +, shift better than * /
+- Share common subexpressions
+    - reuse
+- Optimization Blockers
+    - Procedure calls
+        - move function call to out loop
+    - Memory aliasing
+        - reduce memory repeat access
+        - reduce compiler memory cheking
+- Instruction level parallelism
+    - superscalar processor
+        - execute multiple instructions in one cycle
+        - pipelined
+    - loop unrolling
+        - reduce number of loops
+    - Reassociation
+    - branch prediction 2 bit
+
+---
+
+## 10. The memory hierarchy
+
+- RAM (random access memory)
+- Dram. cheap, but longer access time
+- Disk Drive
+    - Dist ⇒ 2 surface platters.
+    - rings called tracks. sectors seperated by gaps
+    - cylinder form
+    - Capacity = (# bytes/sector) * (# sector/track) * (# track/surface) * (# surface/platter) * (# platter/disk)
+    - Access time = Tavg seek + Tavg rotation + Tavg transfer
+    - Tavg rotation = 0.5 * 1/RPM * 60 sec/min
+    - Tavg transfer = 1/RPM * 1/(# sector/track) * 60 sec/min
 
 ---
